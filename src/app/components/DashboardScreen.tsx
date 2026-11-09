@@ -1,67 +1,214 @@
-export default function DashboardScreen() {
+import NordenProgressBar from "./NordenProgressBar";
+
+export default function DashboardScreen({
+  userData,
+  selectedPath,
+}: {
+  userData: any;
+  selectedPath: string;
+}) {
+  const currentWeight =
+    Number(userData.currentWeight) || 0;
+
+  const totalHeight =
+    Number(userData.heightFeet) * 12 +
+    Number(userData.heightInches);
+
+  const healthyMin =
+    totalHeight > 0
+      ? Math.round(
+          (20 * totalHeight * totalHeight) /
+            703
+        )
+      : 0;
+
+  const healthyMax =
+    totalHeight > 0
+      ? Math.round(
+          (27 * totalHeight * totalHeight) /
+            703
+        )
+      : 0;
+
+  const fitnessMin =
+    totalHeight > 0
+      ? Math.round(
+          (22 * totalHeight * totalHeight) /
+            703
+        )
+      : 0;
+
+  const fitnessMax =
+    totalHeight > 0
+      ? Math.round(
+          (28 * totalHeight * totalHeight) /
+            703
+        )
+      : 0;
+
+  const targetBMI =
+    selectedPath === "fitness"
+      ? 23
+      : 25;
+
+  const nordenGoal =
+    totalHeight > 0
+      ? Math.round(
+          (targetBMI *
+            totalHeight *
+            totalHeight) /
+            703
+        )
+      : 0;
+
   return (
     <div
       style={{
         minHeight: "100vh",
         backgroundColor: "#05070A",
         color: "white",
-        padding: "24px",
+        padding: "30px",
       }}
     >
-      <h1>👋 Welcome to Norden</h1>
+      {/* HEADER */}
 
       <div
         style={{
-          backgroundColor: "#0F141A",
-          padding: "20px",
-          borderRadius: "16px",
-          marginTop: "20px",
+          marginBottom: "24px",
         }}
       >
-        <h2>🏆 Goal Weight</h2>
-        <p>150 lbs</p>
+        <h1>
+          👋 Welcome Back
+        </h1>
+
+        <p
+          style={{
+            color: "#94A3B8",
+          }}
+        >
+          {selectedPath === "fitness"
+            ? "🔥 Fitness Performance"
+            : "🟢 Healthy Balance"}
+        </p>
       </div>
 
-      <div
-        style={{
-          backgroundColor: "#0F141A",
-          padding: "20px",
-          borderRadius: "16px",
-          marginTop: "20px",
-        }}
-      >
-        <h2>⚖️ Current Weight</h2>
-        <p>190 lbs</p>
-        <p>40 lbs remaining</p>
-      </div>
+      {/* QUICK STATS */}
 
       <div
         style={{
           backgroundColor: "#0F141A",
           padding: "20px",
           borderRadius: "16px",
-          marginTop: "20px",
+          marginBottom: "20px",
         }}
       >
-        <h2>🔥 Streak</h2>
-        <p>0 Days</p>
-      </div>
-
-      <div
-        style={{
-          backgroundColor: "#0F141A",
-          padding: "20px",
-          borderRadius: "16px",
-          marginTop: "20px",
-        }}
-      >
-        <h2>🧭 Coach Norden</h2>
+        <h3>Today's Progress</h3>
 
         <p>
-          Today's mission:
-          Drink water, take a walk,
-          and stay consistent.
+          Current Weight:
+          {" "}
+          {currentWeight} lbs
         </p>
+
+        <p>
+          Norden Goal:
+          {" "}
+          {nordenGoal} lbs
+        </p>
+
+        <p>
+          Remaining:
+          {" "}
+          {Math.max(
+            0,
+            currentWeight - nordenGoal
+          )} lbs
+        </p>
+      </div>
+
+      {/* NORDEN BAR */}
+
+      <NordenProgressBar
+        currentWeight={currentWeight}
+        rangeMin={
+          selectedPath === "fitness"
+            ? fitnessMin
+            : healthyMin
+        }
+        rangeMax={
+          selectedPath === "fitness"
+            ? fitnessMax
+            : healthyMax
+        }
+        nordenGoal={nordenGoal}
+        selectedPath={selectedPath}
+      />
+
+      {/* TODAY'S FOCUS */}
+
+      <div
+        style={{
+          backgroundColor: "#0F141A",
+          padding: "20px",
+          borderRadius: "16px",
+          marginBottom: "20px",
+        }}
+      >
+        <h3>
+          🎯 Today's Focus
+        </h3>
+
+        <p>Goal 1</p>
+        <p>Goal 2</p>
+        <p>Goal 3</p>
+      </div>
+
+      {/* COACH */}
+
+      <div
+        style={{
+          backgroundColor: "#0F141A",
+          padding: "20px",
+          borderRadius: "16px",
+          marginBottom: "20px",
+        }}
+      >
+        <h3>
+          🧭 Coach Norden
+        </h3>
+
+        <p>
+          Your daily coaching
+          message will appear here.
+        </p>
+      </div>
+
+      {/* WEIGHT LOG */}
+
+      <div
+        style={{
+          backgroundColor: "#0F141A",
+          padding: "20px",
+          borderRadius: "16px",
+        }}
+      >
+        <h3>
+          ⚖️ Weight Log
+        </h3>
+
+        <button
+          style={{
+            backgroundColor:
+              "#22C55E",
+            color: "white",
+            border: "none",
+            padding: "12px",
+            borderRadius: "10px",
+            width: "100%",
+          }}
+        >
+          + Add Weight
+        </button>
       </div>
     </div>
   );

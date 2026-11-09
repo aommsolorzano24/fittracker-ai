@@ -1,8 +1,54 @@
+"use client";
+
+import { useState } from "react";
+
 export default function BasicInfoScreen({
   onContinue,
+  onBack,
+  userData,
+  setUserData,
 }: {
   onContinue: () => void;
+  onBack: () => void;
+  userData: any;
+  setUserData: any;
 }) {
+  const [error, setError] = useState("");
+
+  const handleContinue = () => {
+    const age = Number(userData.age);
+    const feet = Number(userData.heightFeet);
+    const inches = Number(userData.heightInches);
+
+    if (!userData.gender) {
+      setError("Please select your gender.");
+      return;
+    }
+
+    if (!age || age < 13 || age > 120) {
+      setError(
+        "Please enter a valid age between 13 and 120."
+      );
+      return;
+    }
+
+    if (!feet || feet < 3 || feet > 8) {
+      setError(
+        "Please enter a valid height."
+      );
+      return;
+    }
+
+    if (inches < 0 || inches > 11) {
+      setError(
+        "Inches must be between 0 and 11."
+      );
+      return;
+    }
+
+    setError("");
+    onContinue();
+  };
 
   return (
     <div
@@ -13,6 +59,20 @@ export default function BasicInfoScreen({
         padding: "30px",
       }}
     >
+      <button
+        onClick={onBack}
+        style={{
+          background: "none",
+          border: "none",
+          color: "#94A3B8",
+          cursor: "pointer",
+          marginBottom: "20px",
+          fontSize: "16px",
+        }}
+      >
+        ← Back
+      </button>
+
       <h1
         style={{
           textAlign: "center",
@@ -28,8 +88,7 @@ export default function BasicInfoScreen({
           marginBottom: "40px",
         }}
       >
-        This helps Norden create your
-        personalized journey.
+        This helps Norden create your personalized journey.
       </p>
 
       <div
@@ -42,6 +101,13 @@ export default function BasicInfoScreen({
         <p>Gender</p>
 
         <select
+          value={userData.gender}
+          onChange={(e) =>
+            setUserData({
+              ...userData,
+              gender: e.target.value,
+            })
+          }
           style={{
             width: "100%",
             padding: "12px",
@@ -49,8 +115,9 @@ export default function BasicInfoScreen({
             borderRadius: "10px",
           }}
         >
-          <option>Male</option>
-          <option>Female</option>
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
         </select>
 
         <p>Age</p>
@@ -58,6 +125,13 @@ export default function BasicInfoScreen({
         <input
           type="number"
           placeholder="Enter your age"
+          value={userData.age}
+          onChange={(e) =>
+            setUserData({
+              ...userData,
+              age: e.target.value,
+            })
+          }
           style={{
             width: "100%",
             padding: "12px",
@@ -78,6 +152,13 @@ export default function BasicInfoScreen({
           <input
             type="number"
             placeholder="Feet"
+            value={userData.heightFeet}
+            onChange={(e) =>
+              setUserData({
+                ...userData,
+                heightFeet: e.target.value,
+              })
+            }
             style={{
               width: "120px",
               padding: "12px",
@@ -88,6 +169,13 @@ export default function BasicInfoScreen({
           <input
             type="number"
             placeholder="Inches"
+            value={userData.heightInches}
+            onChange={(e) =>
+              setUserData({
+                ...userData,
+                heightInches: e.target.value,
+              })
+            }
             style={{
               width: "120px",
               padding: "12px",
@@ -96,8 +184,20 @@ export default function BasicInfoScreen({
           />
         </div>
 
+        {error && (
+          <p
+            style={{
+              color: "#EF4444",
+              fontWeight: "bold",
+              marginBottom: "15px",
+            }}
+          >
+            ⚠️ {error}
+          </p>
+        )}
+
         <button
-        onClick={onContinue}
+          onClick={handleContinue}
           style={{
             backgroundColor: "#22C55E",
             color: "white",
