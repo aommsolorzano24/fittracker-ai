@@ -1,4 +1,4 @@
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ onStart }: { onStart?: () => void }) {
   return (
     <div>
       <h1>NORDEN</h1>
@@ -9,7 +9,7 @@ export default function WelcomeScreen() {
         A healthier tomorrow starts today.
       </p>
 
-      <button>
+      <button type="button" onClick={onStart}>
         Get Started
       </button>
     </div>
