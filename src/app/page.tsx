@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import WelcomeScreen from "./components/WelcomeScreen";
 import ChoosePathScreen from "./components/ChoosePathScreen";
@@ -21,6 +21,25 @@ export default function Home() {
     heightInches: "",
     currentWeight: "",
   });
+
+  const [restored, setRestored] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("norden-profile-v1");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (["healthy", "fitness"].includes(saved.selectedPath) && saved.userData &&
+          ["gender", "age", "heightFeet", "heightInches", "currentWeight"].every(key => typeof saved.userData[key] === "string")) {
+          setUserData(saved.userData);
+          setSelectedPath(saved.selectedPath);
+          setScreen("dashboard");
+        }
+      }
+    } catch { /* Onboarding remains available if storage cannot be read. */ }
+    setRestored(true);
+  }, []);
+
+  if (!restored) return <p>Loading Norden…</p>;
 
   if (screen === "welcome") {
     return <WelcomeScreen onStart={() => setScreen("path")} />;
@@ -76,6 +95,9 @@ if (screen === "analysis") {
         setScreen("weight");
       }}
       onStartJourney={() => {
+        try {
+          localStorage.setItem("norden-profile-v1", JSON.stringify({ userData, selectedPath }));
+        } catch { /* Journey will report storage failures when saving progress. */ }
         setScreen("dashboard");
       }}
     />
