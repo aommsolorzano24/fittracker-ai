@@ -110,4 +110,3 @@ export const workoutBlocks = [
 ];
 
 export const trainingDays = ["Push", "Legs", "Pull"];
-
