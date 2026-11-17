@@ -10,7 +10,7 @@ import AnalysisScreen from "./components/AnalysisScreen";
 import DashboardScreen from "./components/DashboardScreen";
 
 export default function Home() {
-  const [screen, setScreen] = useState("path");
+  const [screen, setScreen] = useState("welcome");
 
   const [selectedPath, setSelectedPath] = useState("");
 
@@ -23,7 +23,7 @@ export default function Home() {
   });
 
   if (screen === "welcome") {
-    return <WelcomeScreen />;
+    return <WelcomeScreen onStart={() => setScreen("path")} />;
   }
 
   if (screen === "path") {
@@ -91,5 +91,5 @@ if (screen === "dashboard") {
   );
 }
 
-return <WelcomeScreen />;
+return <WelcomeScreen onStart={() => setScreen("path")} />;
 }
